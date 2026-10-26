@@ -506,6 +506,8 @@
       $(".top__me label").hidden = true;
       nameInput.hidden = true;
       $("#pdfLink").hidden = true;
+      $("#tab-compare .lead").textContent = "案をタップで出し入れできます。画像を押すと拡大します。評価とコメントは、各案のボタンからGitHubのIssueに書いてください。";
+      $("#tab-questions .lead").textContent = "FVを差し替えるにあたって、先に決めておきたいことです。GitHubのIssue（#1）で、当てはまる選択肢にチェックを入れるか、コメントでお返事ください。";
       sm.innerHTML = `評価・コメントは <a href="${issueUrl()}" target="_blank" rel="noopener">GitHubのIssues（非公開）</a> で受け付けています`;
     } else if (Store.mode === "server") {
       sm.textContent = "コメントは関係者全員に共有されます";
