@@ -44,6 +44,7 @@ img { display: block; width: 100%; height: auto; }
 
 /* 本体 */
 .wrap { max-width: 1240px; margin: 0 auto; padding: 24px 20px 80px; display: grid; grid-template-columns: 390px minmax(0, 1fr); gap: 40px; align-items: start; }
+.side { padding-bottom: 24px; }
 .phone { width: 390px; background: #fff; }
 .side { position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow-y: auto; }
 
@@ -116,13 +117,56 @@ img { display: block; width: 100%; height: auto; }
 .list { margin: 16px 0 0; padding: 0; list-style: none; }
 .list li { border-top: 1px solid var(--line); }
 .list li:first-child { border-top: 0; }
-.list button { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 4px 10px; width: 100%; padding: 12px 4px; border: 0; background: none; text-align: left; }
-.list button:hover { background: rgba(255,255,255,.5); }
+.list__go { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 4px 10px; width: 100%; padding: 12px 4px 6px; border: 0; background: none; text-align: left; }
+.list__go:hover { background: rgba(255,255,255,.5); }
 .list .num { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 4px; background: var(--ink); color: #fff; font-weight: 700; font-size: 13px; }
 .list .head { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; font-weight: 700; }
 .list .why { grid-column: 2; color: var(--sub); font-size: 13px; }
 .list li.is-gone .num { background: var(--sub); }
 .list li.is-gone .head { color: var(--sub); }
+
+/* コメント */
+.me { display: grid; gap: 4px; margin: 16px 0 0; padding: 12px 16px; background: var(--panel); border-radius: 6px; }
+.me label { font-size: 12px; color: var(--sub); }
+.me input { padding: 6px 10px; border: 1px solid var(--line); border-radius: 4px; background: var(--bg); font: inherit; }
+.me input:focus { outline: 2px solid var(--accent); outline-offset: 0; background: #fff; }
+.me__mode { margin: 0; font-size: 12px; color: var(--sub); }
+.me__mode.is-local { color: #8a4b00; }
+
+.cm { padding: 0 4px 12px 42px; }
+.cm__list { display: grid; gap: 8px; margin-bottom: 8px; }
+.cm__list:empty { display: none; }
+.cmt { padding: 8px 12px; background: var(--panel); border-radius: 6px; }
+.cmt__meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; font-size: 12px; color: var(--sub); }
+.cmt__meta b { color: var(--ink); font-size: 13px; }
+.cmt__meta button { margin-left: auto; padding: 0; border: 0; background: none; color: var(--sub); font-size: 12px; text-decoration: underline; }
+.cmt__text { margin: 2px 0 0; white-space: pre-wrap; word-break: normal; font-size: 13px; }
+.cm__form { display: flex; gap: 6px; align-items: flex-end; }
+.cm__form textarea {
+  flex: 1;
+  min-width: 0;
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: rgba(255,255,255,.6);
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.5;
+  resize: none;
+  word-break: normal;
+}
+.cm__form textarea:focus { outline: 2px solid var(--accent); outline-offset: 0; background: #fff; }
+.cm__form button { flex: none; padding: 6px 12px; border: 0; border-radius: 4px; background: var(--ink); color: #fff; font-size: 13px; font-weight: 700; }
+.cm__form button:disabled { opacity: .4; }
+.page-cm { margin-top: 12px; padding-top: 16px; border-top: 1px solid var(--line); }
+.page-cm > b { display: block; margin-bottom: 8px; font-size: 14px; }
+.page-cm .cm { padding-left: 0; }
+.copy-all { margin: 8px 0 0; padding: 8px 14px; border: 0; border-radius: 4px; background: var(--muted); font-size: 13px; font-weight: 700; }
+
+.cnt { flex: none; padding: 0 8px; border: 0; border-radius: 4px; background: #fff; color: var(--ink); font-size: 12px; font-weight: 700; line-height: 20px; }
+.gone .cnt { background: var(--panel); }
+.toast { position: fixed; left: 50%; bottom: 72px; z-index: 60; transform: translateX(-50%); padding: 10px 20px; border-radius: 6px; background: var(--ink); color: #fff; font-size: 14px; }
 
 /* ポップアップの再現 */
 .popup { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; background: rgba(40, 30, 35, .55); }

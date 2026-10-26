@@ -580,5 +580,6 @@ window.REVIEW = {
       ]
     }
   ],
-  "comments": false
+  "comments": false,
+  "commentEndpoint": ""
 };
