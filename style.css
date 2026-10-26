@@ -14,6 +14,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 body { margin: 0; line-height: 1.7; font-size: 15px; line-break: strict; overflow-wrap: anywhere; }
 @supports (word-break: auto-phrase) {
   body { word-break: auto-phrase; }
@@ -266,13 +267,10 @@ main { padding: 24px 32px 80px; }
 .thread__form .btn { justify-self: start; padding: 6px 16px; }
 .thread__more { padding: 0; border: 0; background: none; color: var(--accent); font-size: 13px; font-weight: 600; }
 
-/* GitHub Issues へのリンク */
-.gh-link {
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 2px 8px;
-  padding: 8px 14px;
+/* 見る用モード */
+.page-link {
+  display: inline-block;
+  padding: 6px 14px;
   border-radius: 4px;
   background: var(--ink);
   color: #fff;
@@ -280,13 +278,28 @@ main { padding: 24px 32px 80px; }
   font-weight: 700;
   text-decoration: none;
 }
-.gh-link span { font-size: 12px; font-weight: 400; opacity: .8; }
-.gh-link:hover { background: var(--accent); }
-.opt-list { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; padding: 0; list-style: none; }
+.page-link:hover { background: var(--accent); }
+.opt-list { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .opt-list li { padding: 2px 10px; border-radius: 4px; background: var(--muted); font-size: 13px; }
-.gh-row { display: flex; gap: 12px; align-items: baseline; color: var(--ink); font-weight: 700; text-decoration: none; }
-.gh-row span { flex: none; min-width: 3em; color: var(--accent); }
-.gh-row:hover { color: var(--accent); }
+.hub { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+.hub__item {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 16px;
+  padding: 12px;
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--ink);
+  text-decoration: none;
+}
+.hub__item img { width: 120px; height: 192px; object-fit: cover; object-position: top; background: var(--muted); }
+.hub__body { display: flex; flex-direction: column; gap: 4px; }
+.hub__no { font-size: 13px; font-weight: 700; color: var(--accent); }
+.hub__body b { font-size: 17px; }
+.hub__sum { font-size: 13px; color: var(--sub); }
+.hub__body .counts { display: flex; flex-wrap: wrap; gap: 6px; }
+.hub__go { margin-top: auto; font-weight: 700; color: var(--accent); }
+.hub__item:hover .hub__go { text-decoration: underline; }
 
 /* 一覧 */
 .all-item {

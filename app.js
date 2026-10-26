@@ -20,7 +20,7 @@
     mode: "local",
     items: [],
     async init() {
-      if (R.github && R.github.issueRepo) { this.mode = "github"; return; }
+      if (R.comments === false) { this.mode = "off"; return; }
       try {
         const r = await fetch("api.php", { cache: "no-store" });
         const j = await r.json();
@@ -112,27 +112,13 @@
     return { tab: "questions" };
   }
 
-  // ---------- GitHub Issues でやり取りする場合 ----------
-  const GH = () => Store.mode === "github";
-  const issueUrl = (n) => `https://github.com/${R.github.issueRepo}/issues${n ? `/${n}` : ""}`;
-  function issueFor(target) {
-    const [kind, a] = target.split(":");
-    const map = R.github.issues || {};
-    if (["pat", "vote", "sec", "dec"].includes(kind) && map[a]) return map[a];
-    return map.general;
-  }
-  function ghLinkHTML(target, label) {
-    const n = issueFor(target);
-    return `<a class="gh-link" href="${issueUrl(n)}" target="_blank" rel="noopener">${esc(label)}<span>GitHub #${n}</span></a>`;
-  }
+  // ---------- コメントなし（見る用）の場合 ----------
+  const OFF = () => Store.mode === "off";
+  const pageFile = (id) => `pages/${id === "p0" ? "current" : id}.html`;
 
   // ---------- 部品：コメント欄 ----------
   function threadHTML(target) {
-    if (GH()) {
-      const kind = target.split(":")[0];
-      const label = kind === "pat" ? "評価・コメントはGitHubへ" : kind === "sec" ? "このセクションについてGitHubでコメント" : "GitHubで回答・コメント";
-      return ghLinkHTML(target, label);
-    }
+    if (OFF()) return "";
     return `<div class="thread" data-target="${esc(target)}"></div>`;
   }
   function mountThreads(root = document) {
@@ -204,7 +190,7 @@
 
   // ---------- 部品：選択ボタン（評価・判断・回答） ----------
   function choiceHTML(target, options) {
-    if (GH()) {
+    if (OFF()) {
       return target.startsWith("qa:") ? `<ul class="opt-list">${options.map((o) => `<li>${esc(o.label)}</li>`).join("")}</ul>` : "";
     }
     return `<div class="choice" data-state="${esc(target)}">
@@ -278,14 +264,14 @@
           <div class="pcol__type">${esc(p.type)}</div>
         </div>
         <div class="pcol__img"><button type="button" data-zoom="${i}"><img src="${esc(p.img)}" alt="${esc(p.no)} ${esc(p.name)}のFV" loading="lazy"></button></div>
-        <div class="pcol__votes">${p.id === "p0" ? '<p class="vote-tally">比較用の現行FV</p>' : GH() ? threadHTML(`pat:${p.id}`) : choiceHTML(`vote:${p.id}`, R.votes)}</div>
+        <div class="pcol__votes">${OFF() ? `<a class="page-link" href="${pageFile(p.id)}">全ページを見る</a>` : p.id === "p0" ? '<p class="vote-tally">比較用の現行FV</p>' : choiceHTML(`vote:${p.id}`, R.votes)}</div>
         <p class="pcol__hook">${esc(p.hook)}</p>
         <div class="pcol__more">
           <details><summary>画面の構成</summary><ul>${p.parts.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></details>
           ${p.origin ? `<details><summary>移植元（スルリムLPの実績）</summary><p>${esc(p.origin)}</p></details>` : ""}
           <details><summary>実装の想定</summary><p>${esc(p.build)}</p></details>
         </div>
-        <div class="pcol__thread">${GH() ? "" : threadHTML(`pat:${p.id}`)}</div>
+        <div class="pcol__thread">${threadHTML(`pat:${p.id}`)}</div>
       </article>`).join("") || '<p class="empty">表示する案を上で選んでください。</p>';
     box.onclick = (e) => {
       const z = e.target.closest("[data-zoom]");
@@ -313,6 +299,26 @@
 
   // ---------- タブ2：ページ全体 ----------
   function renderPage() {
+    if (OFF()) {
+      $("#tab-page .toolbar").hidden = true;
+      $("#pageSummary").innerHTML = `<p>現行と案1〜5のそれぞれで、FVを差し替えた状態のページを最後まで見られます。セクションには番号（現行の順番）と当社案が付いているので、「案2なら3は消す」のように番号で相談できます。各ページの上で「FVだけ差し替え」と「当社案の構成」を切り替えられます。</p>`;
+      $("#pageRows").innerHTML = `<div class="hub">${R.patterns.map((p) => {
+        const pr = R.proposals[p.id];
+        const counts = {};
+        pr.order.forEach((sid) => { const s = (pr.items[sid] || {}).s; if (s && s !== "keep" && s !== "swap") counts[s] = (counts[s] || 0) + 1; });
+        return `<a class="hub__item" href="${pageFile(p.id)}">
+          <img src="${esc(p.img)}" alt="" loading="lazy">
+          <span class="hub__body">
+            <span class="hub__no">${esc(p.no)}</span>
+            <b>${esc(p.id === "p0" ? "現行ページ" : p.name)}</b>
+            <span class="hub__sum">${esc(pr.summary)}</span>
+            ${Object.keys(counts).length ? `<span class="counts">${Object.entries(counts).map(([s, n]) => `<span class="badge badge--${s}">${esc(R.status[s])} ${n}</span>`).join("")}</span>` : ""}
+            <span class="hub__go">全ページを見る</span>
+          </span>
+        </a>`;
+      }).join("")}</div>`;
+      return;
+    }
     $("#pagePick").innerHTML = R.patterns.map((p) =>
       `<button class="chip" data-p="${p.id}" aria-pressed="${p.id === view.page}">${esc(p.no === "現行" ? "現行" : `${p.no} ${p.name}`)}</button>`).join("");
     $("#hideDeleted").checked = view.hideDeleted;
@@ -343,8 +349,8 @@
             <div class="prow__title"><h3>${esc(name)}</h3>${isCurrent ? "" : `<span class="badge badge--${it.s}">${esc(R.status[it.s])}</span>`}</div>
             ${s.note && sid !== "fv" ? `<p class="prow__note">現状：${esc(s.note)}</p>` : ""}
             ${!isCurrent && it.why ? `<div class="prow__why"><b>当社の提案</b>${esc(it.why)}</div>` : ""}
-            ${isCurrent || GH() ? "" : `<div class="prow__decide"><b>このセクションをどうするか</b>${choiceHTML(`dec:${p.id}:${sid}`, R.decisions)}</div>`}
-            ${isCurrent && GH() ? "" : `<div class="prow__thread">${threadHTML(`sec:${p.id}:${sid}`)}</div>`}
+            ${isCurrent || OFF() ? "" : `<div class="prow__decide"><b>このセクションをどうするか</b>${choiceHTML(`dec:${p.id}:${sid}`, R.decisions)}</div>`}
+            ${OFF() ? "" : `<div class="prow__thread">${threadHTML(`sec:${p.id}:${sid}`)}</div>`}
           </div>
         </div>`;
     });
@@ -378,27 +384,14 @@
         ${choiceHTML(`qa:${q.id}`, q.options.map((o) => ({ v: o, label: o })))}
         ${threadHTML(`q:${q.id}`)}
       </div>`).join("");
-    if (GH()) {
-      const g = $(".q.general .thread");
-      if (g) g.outerHTML = `<p>${esc("ご質問やご意見は、こちらにコメントしてください。")}</p>${threadHTML("general")}`;
-    }
+    if (OFF()) $(".q.general").hidden = true;
     mountThreads($("#tab-questions"));
     refreshChoices($("#tab-questions"));
   }
 
   // ---------- タブ4：一覧 ----------
   function renderAll() {
-    if (GH()) {
-      $("#tab-all .toolbar").hidden = true;
-      const map = R.github.issues || {};
-      const rows = [{ key: "general", label: "【進め方】FV差し替えの前に決めたいこと（5点）・全体へのご意見" }]
-        .concat(R.patterns.filter((p) => p.id !== "p0").map((p) => ({ key: p.id, label: `【${p.no}】${p.name}：評価と、ほかのセクションの扱い` })));
-      $("#allList").innerHTML = `
-        <p class="lead">やり取りはGitHubのIssues（非公開）で行います。招待を受けたアカウントでログインしてから開いてください。</p>
-        ${rows.map((r) => `<div class="all-item"><a class="gh-row" href="${issueUrl(map[r.key])}" target="_blank" rel="noopener"><span>#${map[r.key]}</span>${esc(r.label)}</a></div>`).join("")}
-        <div class="all-item"><a class="gh-row" href="${issueUrl()}" target="_blank" rel="noopener"><span>一覧</span>すべてのIssueを見る</a></div>`;
-      return;
-    }
+    if (OFF()) return;
     $("#onlyOpen").checked = view.onlyOpen;
     const list = Store.items.filter((x) => x.kind === "comment" && (!view.onlyOpen || !x.resolved)).sort((a, b) => b.ts - a.ts);
     $("#allList").innerHTML = list.length
@@ -502,13 +495,14 @@
 
     await Store.init();
     const sm = $("#saveMode");
-    if (GH()) {
-      $(".top__me label").hidden = true;
-      nameInput.hidden = true;
+    if (OFF()) {
+      $(".top__me").hidden = true;
       $("#pdfLink").hidden = true;
-      $("#tab-compare .lead").textContent = "案をタップで出し入れできます。画像を押すと拡大します。評価とコメントは、各案のボタンからGitHubのIssueに書いてください。";
-      $("#tab-questions .lead").textContent = "FVを差し替えるにあたって、先に決めておきたいことです。GitHubのIssue（#1）で、当てはまる選択肢にチェックを入れるか、コメントでお返事ください。";
-      sm.innerHTML = `評価・コメントは <a href="${issueUrl()}" target="_blank" rel="noopener">GitHubのIssues（非公開）</a> で受け付けています`;
+      $('.tabs [data-tab="all"]').hidden = true;
+      $('.tabs [data-tab="page"]').textContent = "全ページを見る";
+      if (view.tab === "all") view.tab = "compare";
+      $("#tab-compare .lead").textContent = "案をタップで出し入れできます。画像を押すと拡大します。各案の「全ページを見る」で、FVを差し替えたページを最後まで確認できます。";
+      $("#tab-questions .lead").textContent = "FVを差し替えるにあたって、先に決めておきたいことです。";
     } else if (Store.mode === "server") {
       sm.textContent = "コメントは関係者全員に共有されます";
     } else {

@@ -158,61 +158,71 @@ window.REVIEW = {
       "id": "popup",
       "name": "年代を聞くポップアップ",
       "img": "img/current/popup.webp",
-      "note": "ページを開いた直後、FVの上に重なって表示される。"
+      "note": "ページを開いた直後、FVの上に重なって表示される（このページでも最初に表示。タップで閉じる）。",
+      "no": "0"
     },
     {
       "id": "fv",
       "name": "FV（ファーストビュー）",
       "img": "img/current/fv.webp",
-      "note": "今回差し替える部分。"
+      "note": "今回差し替える部分。",
+      "no": "1"
     },
     {
       "id": "quiz",
       "name": "4問のお悩みアンケート",
       "img": "img/current/quiz.webp",
-      "note": "4問すべて答えるまで、下の本文が表示されない作り。"
+      "note": "4問すべて答えるまで、下の本文が表示されない作り（このページでは確認用に本文をすべて表示）。",
+      "no": "2"
     },
     {
       "id": "offer",
       "name": "オファー画像（2本25,000円 → 0円〜）",
       "img": "img/current/body01.webp",
-      "note": "アンケート完了後に最初に出る画像。料金・リスク表記つき。"
+      "note": "アンケート完了後に最初に出る画像。料金・リスク表記つき。",
+      "no": "3"
     },
     {
       "id": "benefit",
       "name": "ベネフィット「輪郭が変わると、毎日がちょっと変わる！」",
       "img": "img/current/body02.webp",
-      "note": "日常の3シーン（自撮り・朝の鏡・メイク）。"
+      "note": "日常の3シーン（自撮り・朝の鏡・メイク）。",
+      "no": "4"
     },
     {
       "id": "cases",
       "name": "症例3つ（スワイプ）",
       "img": "img/current/body03.webp",
-      "note": "公式症例。併用施術の注記つき。"
+      "note": "公式症例。併用施術の注記つき。",
+      "no": "5"
     },
     {
       "id": "campaign",
       "name": "赤字覚悟キャンペーン＋予約ボタン",
       "img": "img/current/body04.webp",
-      "note": "30,000円OFFの説明と無料カウンセリング予約。"
+      "note": "30,000円OFFの説明と無料カウンセリング予約。",
+      "no": "6"
     },
     {
       "id": "flow",
       "name": "予約から施術までの流れ",
       "img": "img/current/body05.webp",
-      "note": "7ステップのスライド。"
+      "note": "7ステップのスライド。",
+      "no": "7"
     },
     {
       "id": "legal",
       "name": "施術名・リスク表記",
       "img": "img/current/body06.webp",
-      "note": "医療広告として必須の表記。"
+      "note": "医療広告として必須の表記。",
+      "no": "8"
     },
     {
       "id": "footer",
       "name": "フッター",
       "img": "img/current/body07.webp",
-      "note": ""
+      "note": "",
+      "no": "9"
     }
   ],
   "proposals": {
@@ -570,15 +580,5 @@ window.REVIEW = {
       ]
     }
   ],
-  "github": {
-    "issueRepo": "laplus7123-byte/tcb-ito-fv-review",
-    "issues": {
-      "general": 1,
-      "p1": 2,
-      "p2": 3,
-      "p3": 4,
-      "p4": 5,
-      "p5": 6
-    }
-  }
+  "comments": false
 };
