@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>TCB糸リフト FV案 比較・相談ツール</title>
+<link rel="stylesheet" href="style.css?v=1">
+</head>
+<body>
+<header class="top">
+  <div class="top__title">
+    <h1>TCB糸リフト FV案 比較・相談ツール</h1>
+    <p class="top__sub">
+      <a id="liveLink" target="_blank" rel="noopener">現行LPを開く</a>
+      <a id="pdfLink" target="_blank" rel="noopener">5案の説明資料（PDF）</a>
+      <span id="updated"></span>
+    </p>
+  </div>
+  <div class="top__me">
+    <label for="myName">コメントするときのお名前</label>
+    <input id="myName" type="text" maxlength="40" placeholder="例：Let's 山田">
+    <p id="saveMode" class="save-mode"></p>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button role="tab" data-tab="compare" aria-selected="true">5案を並べる</button>
+  <button role="tab" data-tab="page">ページ全体で見る</button>
+  <button role="tab" data-tab="questions">確認したいこと</button>
+  <button role="tab" data-tab="all">コメント<span id="unresolvedCount"></span></button>
+</nav>
+
+<main>
+  <section id="tab-compare" class="tab-panel">
+    <div class="toolbar">
+      <div class="chips" id="compareFilter" aria-label="表示する案"></div>
+      <div class="sizes" aria-label="画像の大きさ">
+        <span>大きさ</span>
+        <button data-size="s">小</button>
+        <button data-size="m">中</button>
+        <button data-size="l">大</button>
+      </div>
+    </div>
+    <p class="lead">案をタップで出し入れできます。画像を押すと拡大します。各案に評価とコメントを残してください。</p>
+    <div class="compare" id="compare"></div>
+  </section>
+
+  <section id="tab-page" class="tab-panel" hidden>
+    <div class="toolbar">
+      <div class="chips" id="pagePick" aria-label="案を選ぶ"></div>
+      <label class="check"><input type="checkbox" id="hideDeleted"> 削除予定の部分を隠す</label>
+    </div>
+    <div class="page-summary" id="pageSummary"></div>
+    <div id="pageRows"></div>
+  </section>
+
+  <section id="tab-questions" class="tab-panel" hidden>
+    <p class="lead">FVを差し替えるにあたって、先に決めておきたいことです。選択肢を押すか、コメントでお返事ください。</p>
+    <div id="questionList"></div>
+    <div class="q general">
+      <h3>そのほか全体へのコメント</h3>
+      <div class="thread" data-target="general"></div>
+    </div>
+  </section>
+
+  <section id="tab-all" class="tab-panel" hidden>
+    <div class="toolbar">
+      <label class="check"><input type="checkbox" id="onlyOpen" checked> 未解決だけ表示</label>
+      <button class="btn" id="copyAll">やり取りをテキストでコピー</button>
+    </div>
+    <div id="allList"></div>
+  </section>
+</main>
+
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lightbox__close" aria-label="閉じる">閉じる</button>
+  <button class="lightbox__nav prev" aria-label="前の案">‹</button>
+  <figure>
+    <img alt="">
+    <figcaption></figcaption>
+  </figure>
+  <button class="lightbox__nav next" aria-label="次の案">›</button>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="data.js?v=1"></script>
+<script src="app.js?v=1"></script>
+</body>
+</html>
